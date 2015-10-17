@@ -1,7 +1,13 @@
+def slow_text(statement)
+	statement.each_char do |letter|
+		sleep 0.05
+		print letter
+	end
+end
+
 #Welcomes player
 def welcome
- puts "Welcome to the Blackjack Table"
- sleep(1)
+ slow_text("Welcome to the Blackjack Table\n")
 end
 
 #Deals a card
@@ -31,8 +37,7 @@ def display_cards(card1, card2)
   if card2 == 11
     card2 = "Ace"
   end
-  puts "You were dealt a(n) #{card1}, and a(n) #{card2}"
-  sleep(1)
+  slow_text("You were dealt a(n) #{card1}, and a(n) #{card2}\n")
 end
 
 #displays card dealt to player
@@ -43,56 +48,64 @@ def display_deal(new_card)
     new_card = "Ace"
   else
   end
-  puts "You were dealt a(n) #{new_card}"
-  sleep(1)
+  slow_text("You were dealt a(n) #{new_card}\n")
 end
 
 #Displays players card total
 def display_card_total(card_total)
-  puts "Your cards add up to #{card_total}."
-  sleep(1)
+  slow_text("Your cards add up to #{card_total}.\n")
 end
 
 def display_card_total_w_ace(card_total)
-  puts "Your cards add up to #{card_total} or #{card_total - 10}"
-  sleep(1)
+  slow_text("Your cards add up to #{card_total} or #{card_total - 10}\n")
 end
 
 #chip count
 def display_chip_count(chip_total)
-  puts "You have $#{chip_total} in chips."
-  sleep(1)
+  slow_text("You have $#{chip_total} in chips.\n")
   return chip_total
 end
 
 #user chooses bet
 def betting
-  print "Please type an amount to bet: $"
+  slow_text("Please type an amount to bet: $")
   amount = get_user_input
-  if amount.to_i > $chip_total
-    bet_too_much
+  if is_number(amount) == false
+    invalid_command_betting
     betting
   else
-    return amount
+    if amount.to_i > $chip_total
+      bet_too_much
+      betting
+    else
+      return amount
+    end
   end
+end
+
+#tests if bet is a number
+def is_number(string)
+  true if Float(string) rescue false
 end
 
 #Tells player he has not enough money if he bets too much
 def bet_too_much
-  puts "You don't have that much money, please bet again."
-  sleep(1)
+  slow_text("You don't have that much money, please bet again.\n")
 end
 
 
 #Displays dealers first card
 def display_card_dealer(card1_dealer)
-  puts "The dealer is showing one card with a value of #{card1_dealer}."
-  sleep(1)
+  slow_text("The dealer is showing one card with a value of #{card1_dealer}.\n")
 end
 
 #Prompts player to hit or stay
+def prompt_user_first_hit
+  slow_text("Type 'h' to hit, 's' to stay, or 'd' to double.\n")
+end
+
 def prompt_user
-  puts "Type 'h' to hit, 's' to stay, or 'd' to double."
+ slow_text("Type 'h' to hit, 's' to stay.\n")
 end
 
 #Gets input form player
@@ -129,18 +142,17 @@ def initial_round
   display_cards(card1, card2)
   change_face_card1_to_num
   change_face_card2_to_num
-  if $your_cards.include?(11)  && your_cards > 21
+  if $your_cards.include?(11)  && your_card_total > 21
     $your_cards.delete(11)
     your_cards(11)
     your_cards(1)
-    card_total = your_cards
-    display_card_total(your_cards)
-    return your_cards
+    display_card_total(your_card_total)
+    return your_card_total
     elsif $your_cards.include?(11)
-    display_card_total_w_ace(your_cards)
-    return your_cards
+    display_card_total_w_ace(your_card_total)
+    return your_card_total
   else
-    display_card_total(your_cards)
+    display_card_total(your_card_total)
   end
 end
 
@@ -179,10 +191,12 @@ def change_face_card2_to_num
   end
 end
   
+########Change this method to first_hit and make new hit? method
+########option to double or split
 
-#deals a new card if player hits, doesn't if he stays
-def hit?(new_card_total)
-  prompt_user
+#asks palyer if he wants to hit, stay or double
+def first_hit?(new_card_total)
+  prompt_user_first_hit
   h_or_s_or_d = get_user_input
   new_card_total = new_card_total
   if h_or_s_or_d == "d"
@@ -190,111 +204,134 @@ def hit?(new_card_total)
   elsif h_or_s_or_d == "h"
    hit(new_card_total)
   elsif h_or_s_or_d == "s"
-    return your_cards
+    return your_card_total
+  else
+    invalid_command
+    first_hit?(new_card_total)
+  end
+end
+
+#asks palyer if he wants to hit or stay
+def hit?(new_card_total)
+  prompt_user
+  h_or_s = get_user_input
+  new_card_total = new_card_total
+  if h_or_s == "h"
+    hit(new_card_total)
+  elsif h_or_s == "s"
+    return your_card_total
   else
     invalid_command
     hit?(new_card_total)
   end
 end
 
-#deals one card and doubles bet when user doubles
+
+#deals one card and doubles bet
 def double(new_card_total)
   new_card_total = new_card_total
   if $bet.to_i * 2 > $chip_total
-    puts "Not enough money to double."
-    sleep(1)
+    slow_text("Not enough money to double.\n")
     if $your_cards.include?(11)
-      display_card_total_w_ace(your_cards)
+      display_card_total_w_ace(your_card_total)
     else
-      display_card_total(your_cards)
+      display_card_total(your_card_total)
     end
-    sleep(1)
-    hit?(your_cards)
+    first_hit?(your_card_total)
   else
     new_card = deal_card
     your_cards(new_card)
-    new_card_total = your_cards
+    new_card_total = your_card_total
     display_deal(new_card)
-    if $your_cards.include?(11)  && your_cards > 21
+    if $your_cards.include?(11)  && your_card_total > 21
       $your_cards.slice!($your_cards.index(11))
       your_cards(1)
-      return your_cards
-    elsif your_cards > 21
-      display_card_total(your_cards)
+      return your_card_total
+    elsif your_card_total > 21
+      display_card_total(your_card_total)
       $bet = $bet.to_i * 2
-      puts "Busted! You lose."
+      slow_text("Busted! You lose.\n")
       $chip_total -= $bet.to_i
-      sleep(1)
       lost_all_money?
-      return your_cards
+      return your_card_total
     else
       $bet = $bet.to_i * 2
-      return your_cards
+      return your_card_total
     end
   end
 end
 
+#deals one more card into the players hand
 def hit(new_card_total)
   new_card = deal_card
   your_cards(new_card)
   new_card_total = new_card_total
   display_deal(new_card)
-  new_card_total = your_cards
-  if $your_cards.include?(11)  && your_cards > 21
+  new_card_total = your_card_total
+  if $your_cards.include?(11)  && your_card_total > 21
     $your_cards.slice!($your_cards.index(11))
     your_cards(1)
-    new_card_total = your_cards
-    display_card_total(your_cards)
-    hit?(your_cards)
-  elsif your_cards > 21
-    display_card_total(your_cards)
-    puts "Busted! You lose."
+    new_card_total = your_card_total
+    display_card_total(your_card_total)
+    hit?(your_card_total)
+  elsif your_card_total > 21
+    display_card_total(your_card_total)
+    slow_text("Busted! You lose.\n")
     $chip_total -= $bet.to_i
-    sleep(1)
     lost_all_money?
   elsif $your_cards.include?(11)
-    display_card_total_w_ace(your_cards)
-    hit?(your_cards)
-    return your_cards
+    display_card_total_w_ace(your_card_total)
+    hit?(your_card_total)
+    return your_card_total
   else
-    display_card_total(your_cards)
-    hit?(your_cards)
-    return your_cards
+    display_card_total(your_card_total)
+    hit?(your_card_total)
+    return your_card_total
   end 
 end
 
-####Make a mmethod that continually adds cards dealt to an array and returns value
-####of  sum of all array values
-
-def your_cards(card = 0)
+#adds a card to the players hand
+def your_cards(card)
   $your_cards << card
-  return $your_cards.inject{|sum,x| sum + x }
 end
 
+#calculates the players card total
+def your_card_total
+  $your_cards.inject{|sum,x| sum + x }
+end
+
+#calculates the dealers card total
 def dealer_cards(card = 0)
   $dealer_cards << card
   return $dealer_cards.inject{|sum,x| sum + x }
 end
 
+
+######method may or may not work, need to test
+######not yet impletmented
 def spilt
+  $your_cards2 = []
+  $your_cards2 << $your_cards.pop
+end
+
+#displays invalid bet message
+def invalid_command_betting
+  slow_text("Please enter a valid bet.\n")
 end
 
 #returns invalid command if user does not type h or s
 def invalid_command
-  puts "That is not a valid command"
-  sleep(1)
+  slow_text("That is not a valid command.\n")
 end
 
 #dealer reveals his hand
 def dealer_reveal(card_total_dealer)
   if card_total_dealer == 22
     card_total_dealer = 12
-    puts "The dealer reveals his full card total of #{card_total_dealer}"
-    sleep(1)
+    slow_text("The dealer reveals his full card total of #{card_total_dealer}\n")
     return card_total_dealer
   else
-    puts "The dealer reveals his full card total of #{card_total_dealer}"
-    sleep(1)
+slow_text("The dealer reveals his full card total of #{card_total_dealer}\n")
     return card_total_dealer
   end
 end
@@ -302,11 +339,9 @@ end
 #hits for delaer is hand below 16
 def dealer_hit?(card_total_dealer)
 until card_total_dealer > 16 do
-  puts "The dealer hits."
-  sleep(1)
+ slow_text("The dealer hits.\n")
   card_total_dealer += deal_card
-  puts "The dealer has a new card total of #{card_total_dealer}"
-  sleep(1)
+  slow_text("The dealer has a new card total of #{card_total_dealer}\n")
   end
   return card_total_dealer
 end
@@ -314,28 +349,23 @@ end
 #compares dealers and players hnad to detrimine winner
 def compare_hands(card_total_dealer, card_total)
   if card_total_dealer == card_total
-    puts "You pushed!"
-    sleep(1)
+    slow_text("You pushed!\n")
   elsif card_total_dealer > 21 && card_total < 22
-    puts "The dealer busts! You have won!"
+    slow_text("The dealer busts! You have won!\n")
    $chip_total += $bet.to_i
-    sleep(1)
   elsif card_total > card_total_dealer && card_total < 22 && card_total_dealer < 22
-    puts "You have won!"
+    slow_text("You have won!\n")
     $chip_total += $bet.to_i
-    sleep(1)
   else
-    puts "You lost!"
+    slow_text("You lost!\n")
     $chip_total -= $bet.to_i
-    sleep(1)
   end
 end
 
 #Asks player if he wants to play again
 def play_again
-  puts "You have $#{$chip_total} in chips."
-  sleep(1)
-  puts "Type 'p' to play again or 'q' to quit."
+  slow_text("You have $#{$chip_total} in chips.\n")
+  slow_text("Type 'p' to play again or 'q' to quit.\n")
   p_or_q = gets.chomp
   if p_or_q == "p"
     $your_cards = []
@@ -348,11 +378,11 @@ def play_again
   end
 end
 
+#resets chip count to $500 and infoms the player
 def lost_all_money?
   if $chip_total == 0
-    puts "You have lost all your money, your chip count has been reset to $500"
+    slow_text("You have lost all your money, your chip count has been reset to $500\n")
     $chip_total = 500
-    sleep(1)
     play_again
   else
     play_again
@@ -375,7 +405,7 @@ def runner
   ctd = card_total_dealer(dc1, dc2)
   display_card_dealer(dc1)
   card_total = initial_round 
-  new_card_total = hit?(card_total) 
+  new_card_total = first_hit?(card_total) 
   display_card_total(new_card_total)
   dealer_reveal(ctd)
   ctd = dealer_hit?(ctd)
