@@ -165,7 +165,9 @@ end
 
 #Chages face cards for card 1 to numbers
 def change_face_card1_to_num
-  if $card1 == "Jack"
+  if $card1 == "10"
+    $card1 = 10
+  elsif $card1 == "Jack"
     $card1 = 10
   elsif $card1 == "Queen"
     $card1 = 10
@@ -179,9 +181,9 @@ end
 
 #Changes face cards for card 2 to numbers
 def change_face_card2_to_num
-  if $card2 == "Jack"
+  if $card2 == "10"
     $card2 = 10
-  elsif $card2 == "Queen"
+  elsif $card2 == "Jack"
     $card2 = 10
   elsif $card2 == "King"
     $card2 = 10
