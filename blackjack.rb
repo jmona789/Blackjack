@@ -12,25 +12,50 @@ end
 
 #Deals a card
 def deal_card
-  a = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  b = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  c = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  d = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  e = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  f = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11]
-  cards = a + b + c + d + e + f
+  #make array of cards, 6 decks
+  cards = []
+
+  6.times do 
+    i= 2
+    while i < 10
+      4.times do 
+        cards.push i
+      end
+      i += 1
+    end
+    16.times do 
+      cards.push 10
+    end
+    4.times do 
+      cards.push 11
+    end
+  end
+
+  # i = 2
+  # cards = []
+  # while i < 10 do
+  #   cards.fill(i, a.size, 24)
+  #   i += 1
+  # end
+  # i = 1
+  #   96 times do
+  #     cards.push 10
+  #     i += 1
+  #   end
   cards.sample
 end
 
 
 #displays the cards the player is dealt
 def display_cards(card1, card2)
+  #if dealt a 10 dispaly the name of a random face card
   if card1 == 10
     card1 = ["10", "Jack", "Queen", "King"].sample
   end
   if card2 == 10
     card2 = ["10", "Jack", "Queen", "King"].sample
   end
+  #if dealt a 11 display the word Ace
   if card1 == 11
     card1 = "Ace"
   end
@@ -42,9 +67,11 @@ end
 
 #displays card dealt to player
 def display_deal(new_card)
+  #if dealt a 10 dispaly the name of a random face card
   if new_card == 10
     new_card = ["10", "Jack", "Queen", "King"].sample
   elsif new_card == 11
+    #if dealt a 11 display the word Ace
     new_card = "Ace"
   else
   end
