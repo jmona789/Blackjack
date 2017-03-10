@@ -12,6 +12,7 @@ end
 
 #Deals a card
 def deal_card
+  return 5
   #make array of cards, 6 decks
   cards = []
 
@@ -30,18 +31,6 @@ def deal_card
       cards.push 11
     end
   end
-
-  # i = 2
-  # cards = []
-  # while i < 10 do
-  #   cards.fill(i, a.size, 24)
-  #   i += 1
-  # end
-  # i = 1
-  #   96 times do
-  #     cards.push 10
-  #     i += 1
-  #   end
   cards.sample
 end
 
@@ -128,7 +117,14 @@ end
 
 #Prompts player to hit or stay
 def prompt_user_first_hit
-  slow_text("Type 'h' to hit, 's' to stay, or 'd' to double.\n")
+  # print 'cards is #{your_cards}'
+  # print 'card2 is #{$your_cards}'
+
+  if $your_cards[0] == $your_cards[1] 
+      slow_text("Type 'h' to hit, 's' to stay, 'd' to double, or 'sp' to split.\n")
+    else 
+      slow_text("Type 'h' to hit, 's' to stay, 'd' to double.\n")
+  end
 end
 
 def prompt_user
@@ -226,14 +222,18 @@ end
 #asks palyer if he wants to hit, stay or double
 def first_hit?(new_card_total)
   prompt_user_first_hit
-  h_or_s_or_d = get_user_input
+  h_or_s_d_or_sp = get_user_input
   new_card_total = new_card_total
-  if h_or_s_or_d == "d"
+  if h_or_s_d_or_sp == "d"
     double(new_card_total)
-  elsif h_or_s_or_d == "h"
+  elsif h_or_s_d_or_sp == "h"
    hit(new_card_total)
-  elsif h_or_s_or_d == "s"
+  elsif h_or_s_d_or_sp == "s"
     return your_card_total
+  elsif h_or_s_d_or_sp == "sp" && $your_cards[0] == $your_cards[1]
+    split()
+  elsif h_or_s_d_or_sp == "sp" && $your_cards[0] != $your_cards[1]
+    slow_text("You need two of the same card in order to split")
   else
     invalid_command
     first_hit?(new_card_total)
@@ -338,9 +338,10 @@ end
 
 ######method may or may not work, need to test
 ######not yet impletmented
-def spilt
+def split
   $your_cards2 = []
   $your_cards2 << $your_cards.pop
+  return $your_cards2
 end
 
 #displays invalid bet message
@@ -434,7 +435,9 @@ def runner
   ctd = card_total_dealer(dc1, dc2)
   display_card_dealer(dc1)
   card_total = initial_round 
+
   new_card_total = first_hit?(card_total) 
+
   display_card_total(new_card_total)
   dealer_reveal(ctd)
   ctd = dealer_hit?(ctd)
