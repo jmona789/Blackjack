@@ -231,7 +231,9 @@ def first_hit?(new_card_total)
   elsif h_or_s_d_or_sp == "s"
     return your_card_total
   elsif h_or_s_d_or_sp == "sp" && $your_cards[0] == $your_cards[1]
-    first_hit?(split())
+    new_card_total = split()
+    display_card_total(new_card_total)
+    hit?(new_card_total)
   elsif h_or_s_d_or_sp == "sp" && $your_cards[0] != $your_cards[1]
     slow_text("You need two of the same card in order to split")
   else
@@ -339,9 +341,10 @@ end
 ######method may or may not work, need to test
 ######not yet impletmented
 def split
+  $has_split = true
   $your_cards2 = []
   $your_cards2 << $your_cards.pop
-  return $your_cards2
+  return $your_cards[0]
 end
 
 #displays invalid bet message
@@ -424,6 +427,7 @@ $bet
 $your_cards = []
 welcome
 $dealer_cards = []
+$has_split = false
 
 
 #runs program
