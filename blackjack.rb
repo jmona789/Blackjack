@@ -422,13 +422,27 @@ def lost_all_money?
   end
 end
 
-$chip_total = 500
-$bet
-$your_cards = []
-welcome
-$dealer_cards = []
-$has_split = false
+class Game
+   # @@no_of_customers=0
+   def initialize()
+      @chip_total = 500
+      @bet
+      @your_cards = []
+      @dealer_cards = []
+      @has_split = false
+   end
+end
 
+# Game = {
+#   $chip_total = 500
+#   $bet
+#   $your_cards = []
+#   $dealer_cards = []
+#   $has_split = false
+# }
+
+
+welcome
 
 #runs program
 def runner
