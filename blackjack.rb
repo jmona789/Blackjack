@@ -231,7 +231,7 @@ def first_hit?(new_card_total)
   elsif h_or_s_d_or_sp == "s"
     return your_card_total
   elsif h_or_s_d_or_sp == "sp" && $your_cards[0] == $your_cards[1]
-    split()
+    first_hit?(split())
   elsif h_or_s_d_or_sp == "sp" && $your_cards[0] != $your_cards[1]
     slow_text("You need two of the same card in order to split")
   else
